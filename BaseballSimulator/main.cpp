@@ -13,7 +13,7 @@ int main() {
 	Roster** league = new Roster* [30];
 
 	//Make chaos roster
-	Roster r("Michael's Team");
+	Roster r("AL", "Michael's Team");
 
 	//Add custom players to roster
 	
@@ -26,44 +26,48 @@ int main() {
 	Player LouGehrig("Lou Gehrig", 2721, 790, 1508, 534, 163, 493, 8001);
 	r.addPlayer(&LouGehrig);
 	
+	Player HankAaron("Hank Aaron", 3771, 1383, 1402, 624, 98, 755, 12364);
+	r.addPlayer(&HankAaron);
+
 	Player BabeRuth("Babe Ruth", 2873, 1330, 2062, 506, 136, 714, 8399);
 	r.addPlayer(&BabeRuth);
 
 	Player BarryBonds("Barry Bonds", 2935, 1539, 2558, 601, 77, 762, 9847);
 	r.addPlayer(&BarryBonds);
 
+	Player WillieMays("Willie Mays", 3293, 1526, 1468, 525, 141, 660, 10924);
+	r.addPlayer(&WillieMays);
+
+	Player MickeyMantle("Mickey Mantle", 2415, 1710, 1733, 344, 72, 536, 8102);
+	r.addPlayer(&MickeyMantle);
+
+	Player MarkMcGwire("Mark McGwire", 1626, 1596, 1317, 252, 6, 583, 6187);
+	r.addPlayer(&MarkMcGwire);
+
 	//A gross overestimate of how I'd do in the MLB
 	Player MichaelBryant("Michael Bryant", 5, 100, 5, 0, 0, 0, 500);
 	r.addPlayer(&MichaelBryant);
-	
-
-
-	Player g;
-	Player h;
-	Player j;
-	Player m;
-
-
-	
-	
-	r.addPlayer(&h);
-	r.addPlayer(&j);
-	r.addPlayer(&m);
-	r.addPlayer(&g);
 
 	//Add custom roster to league
 	league[0] = &r;
 	
 	//Fill out rest of league with rosters composed of random players
-	for (int i = 1; i < 30; i++) {
-		league[i] = new Roster();
+	for (int i = 1; i < 29; i++) {
+		league[i] = new Roster(i % 2 ? "Al" : "NL");
 		for (int j = 0; j < 9; j++) {
 			league[i]->addPlayer(new Player());
 		}
 	}
+	//...Except for team 30 which has super slugger because why not
+	league[29] = new Roster("NL");
+	Player Slugger("Slug McSlugger", 100, 10, 10, 1, 1, 97, 550);
+	league[29]->addPlayer(&Slugger);
+	for (int j = 0; j < 8; j++) {
+		league[29]->addPlayer(new Player());
+	}
 
 	//Play random matchups until all rosters have played 162 games
-	//Plays a game for each team before playing another game for the same team..ensures that all teams play exactly 162 games
+	//Plays a game for each team before playing another game for the same team...ensures that all teams play exactly 162 games
 	//There is no statistical advantage to having games played at home or away
 	for (int i = 0; i < 162; i++) {
 		for (int j = 0; j < 30; j++) {
@@ -76,7 +80,6 @@ int main() {
 				Roster* s = league[r];
 				playGame(t, s);
 			}
-			
 		}
 	}
 	
@@ -103,7 +106,7 @@ int main() {
 	}
 
 	//Calculate top 10 roster W, BA, HR, H, RBI, R, PA 
-	Roster** topRosterW = new Roster * [10];
+	Roster** topRosterW = new Roster * [30];
 	Roster** topRosterBA = new Roster* [10];
 	Roster** topRosterHR = new Roster* [10];
 	Roster** topRosterH = new Roster* [10];
@@ -116,7 +119,6 @@ int main() {
 		Roster* t = league[i];
 		placeRosterInRankings(t, topRosterW, topRosterBA, topRosterHR, topRosterH, topRosterR, topRosterPA);
 	}
-
 
 	//Display stat leaderboards
 	int k = 0;
@@ -185,14 +187,12 @@ int main() {
 	std::cout << r.W << " wins out of " << r.gamesPlayed << " games played\n" << std::endl;
 	for (int i = 0; i < 9; i++) {
 		Player* p = league[0]->players[i];
-		std::cout << p->name << "\t\t\t" << p->BA << " BA" << "\t" << p->HR << " HR" << "\t" << p->H << " H" << "\t" << p->RBI << " RBI" << "\t" << p->R << " R" << "\t" << p->PA << " PA" << std::endl;
+		std::cout << p->name << "\t\t\t" << p->BA << " BA" << "\t" << p->HR << " HR" << "\t" << p->H << " H" << "\t" << p->BB << " BB" << "\t" << p->RBI << " RBI" << "\t\t" << p->R << " R" << "\t" << p->PA << " PA" << std::endl;
 	}
 
-	std::cout << "========================================================================================" << std::endl;
+	std::cout << "=======================================================================================================" << std::endl;
 	
-	std::cout << r.name << "\t\t\t" << r.BA << " BA" << "\t" << r.HR << " HR" << "\t" << r.H << " H" << "\t" << r.RBI << " RBI" << "\t" << r.R << " R" <<  "\t" << r.PA << " PA" << std::endl;
-
-	
+	std::cout << r.name << "\t\t\t" << r.BA << " BA" << "\t" << r.HR << " HR" << "\t" << r.H << " H" << "\t" << r.BB << " BB" << "\t" << r.RBI << " RBI" << "\t" << r.R << " R" <<  "\t" << r.PA << " PA" << std::endl;
 	
 	
 

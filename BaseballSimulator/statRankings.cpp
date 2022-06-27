@@ -103,20 +103,20 @@ void placePlayerInRankings(Player* p, Player** topBA, Player** topHR, Player** t
 
 void initializeRosterRankings(Roster** topRosterW, Roster** topRosterBA, Roster** topRosterHR, Roster** topRosterH, Roster** topRosterR, Roster** topRosterPA) {
 	for (int i = 0; i < 10; i++) {
-		topRosterW[i] = new Roster();
-		topRosterBA[i] = new Roster();
-		topRosterHR[i] = new Roster();
-		topRosterH[i] = new Roster();
-		topRosterR[i] = new Roster();
-		topRosterPA[i] = new Roster();
+		topRosterW[i] = new Roster("");
+		topRosterBA[i] = new Roster("");
+		topRosterHR[i] = new Roster("");
+		topRosterH[i] = new Roster("");
+		topRosterR[i] = new Roster("");
+		topRosterPA[i] = new Roster("");
 	}
 }
 
 void placeRosterInRankings(Roster* r, Roster** topRosterW, Roster** topRosterBA, Roster** topRosterHR, Roster** topRosterH, Roster** topRosterR, Roster** topRosterPA) {
 	int i = 0;
-	while (i < 10) {
+	while (i < 30) {
 		if (r->W > topRosterW[i]->W) {
-			for (int j = 9; j > i; j--) {
+			for (int j = 29; j > i; j--) {
 				topRosterW[j] = topRosterW[j - 1];
 			}
 			topRosterW[i] = r;

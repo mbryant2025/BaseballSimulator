@@ -4,3 +4,5 @@
 using std::string;
 
 string randomName();
+
+int* randomStats();

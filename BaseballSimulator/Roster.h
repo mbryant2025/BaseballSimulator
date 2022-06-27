@@ -30,11 +30,12 @@ class Roster {
 		int _3B;
 		int gamesPlayed;
 		int W;
+		string league;
 		
-		void init(string givenName);
+		void init(string league, string givenName);
 		
-		Roster(string givenName);
-		Roster();
+		Roster(string league, string givenName);
+		Roster(string league);
 		
 		void addPlayer(Player* p);
 

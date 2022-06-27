@@ -43,11 +43,8 @@ void Player::init(string givenName, int givenH, int givenSO, int givenBB, int gi
 	this->probHR = (double) givenHR / givenPA;
 
 	//Check for probabilities >1 or < 0
-	double toCheck[] = {probSO, probOut, probBB, prob1B, prob2B, prob3B, probHR};
-
-	for (double x : toCheck) {
+	for (double x : {probSO, probOut, probBB, prob1B, prob2B, prob3B, probHR}) {
 		if(x > 1 || x < 0) {
-			//throw std::invalid_argument("received negative value");
 			std::cout << "Error: Invalid player input statistics" << std::endl;
 			exit(1);
 		}
@@ -63,8 +60,10 @@ Player::Player() {
 	//Using Brett Gardner's stats for now
 
 	string n = randomName();
+
+	int* stats = randomStats();
 	
-	init(n, 1470, 1245, 699, 251, 73, 139, 5737);
+	init(n, stats[0], stats[1], stats[2], stats[3], stats[4], stats[5], stats[6]);
 }
 
 //Returns string representing outcome and updates player stats

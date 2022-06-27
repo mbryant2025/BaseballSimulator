@@ -5,7 +5,7 @@
 
 int rosterNum = 1;
 
-void Roster::init(string givenName) {
+void Roster::init(string league, string givenName) {
 	
 	this->name = givenName;
 	this->BA = 0;
@@ -29,15 +29,17 @@ void Roster::init(string givenName) {
 
 	this->gamesPlayed = 0;
 	this->W = 0;
+
+	this->league = league;
 }
 
-Roster::Roster(string givenName) {
+Roster::Roster(string league, string givenName) {
 
-	init(givenName);
+	Roster::init(league, givenName);
 }
 
-Roster::Roster() {
-	init("CPU Team " + std::to_string(rosterNum++));
+Roster::Roster(string league) {
+	Roster::init(league, "CPU Team " + std::to_string(rosterNum++));
 }
 
 void Roster::addPlayer(Player* p) {
