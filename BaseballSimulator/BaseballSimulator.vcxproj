@@ -144,11 +144,13 @@
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Roster.cpp" />
     <ClCompile Include="generatePlayer.cpp" />
+    <ClCompile Include="Score.cpp" />
     <ClCompile Include="statRankings.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="game.h" />
     <ClInclude Include="generatePlayer.h" />
+    <ClInclude Include="Score.h" />
     <ClInclude Include="statRankings.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Roster.h" />

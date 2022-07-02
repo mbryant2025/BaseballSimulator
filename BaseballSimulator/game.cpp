@@ -1,11 +1,12 @@
 #include "game.h"
 #include "Roster.h"
 #include "Player.h"
+#include "Score.h"
 #include <iostream>
 #include <string>
 
 //Simulates a game by updating rosters and all involved players
-void playGame(Roster* home, Roster* away) {
+void playGame(Roster* home, Roster* away, Score** scores, int* scorePos) {
 
 	if (home->numPlayers != 9 || away->numPlayers != 9) {
 		std::cout << "Error: Rosters must have 9 players" << std::endl;
@@ -195,10 +196,17 @@ void playGame(Roster* home, Roster* away) {
 	home->gamesPlayed++;
 	away->gamesPlayed++;
 
+	Score* s;
+
 	if (homeScore > awayScore) {
 		home->W++;
+		s = new Score(home, away, homeScore, awayScore);
 	}
 	else {
 		away->W++;
+		s = new Score(away, home, awayScore, homeScore);
 	}
+
+	scores[(*scorePos)++] = s;
+
 }

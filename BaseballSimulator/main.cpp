@@ -2,6 +2,7 @@
 #include "Roster.h"
 #include "Player.h"
 #include "game.h"
+#include "Score.h"
 #include <iostream>
 #include "statRankings.h"
 
@@ -66,6 +67,10 @@ int main() {
 		league[29]->addPlayer(new Player());
 	}
 
+	//Record of all regular season game scores for stats
+	Score** scores = new Score* [4860];
+	int scorePos = 0;
+
 	//Play random matchups until all rosters have played 162 games
 	//Plays a game for each team before playing another game for the same team...ensures that all teams play exactly 162 games
 	//There is no statistical advantage to having games played at home or away
@@ -78,7 +83,7 @@ int main() {
 					r = rand() % 30;
 				}
 				Roster* s = league[r];
-				playGame(t, s);
+				playGame(t, s, scores, &scorePos);
 			}
 		}
 	}
@@ -163,7 +168,7 @@ int main() {
 		std::cout << "======================================" << std::endl;
 		k++;
 	}
-	std::cout << "\n\n" << std::endl;
+	std::cout << "\n" << std::endl;
 
 	k = 0;
 	std::cout << "Team Leaders:\n" << std::endl;
@@ -202,7 +207,48 @@ int main() {
 		k++;
 	}
 	std::cout << "\n" << std::endl;
+
+	//Record scores
+	std::cout << "Record Scores:\n" << std::endl;
+
+	//Find highest score in a game
+	Score* highScore = scores[0];
+	for (int i = 0; i < scorePos; i++) {
+		if (scores[i]->winnerScore > highScore->winnerScore) {
+			highScore = scores[i];
+		}
+	}
+	std::cout << "Highest Score:" << std::endl;
+	std::cout << highScore->winner->name << " vs. " << highScore->loser->name << ": " << highScore->winnerScore << " - " << highScore->loserScore << "\n\n" << std::endl;
+
+	//Find highest combined score
+	Score* highCombinedScore = scores[0];
+	int combinedScore = highCombinedScore->winnerScore + highCombinedScore->loserScore;
+	for (int i = 0; i < scorePos; i++) {
+		if (scores[i]->winnerScore + scores[i]->loserScore > combinedScore) {
+			highScore = scores[i];
+			combinedScore = scores[i]->winnerScore + scores[i]->loserScore;
+		}
+	}
+	std::cout << "Highest Combined Score:" << std::endl;
+	std::cout << highScore->winner->name << " vs. " << highScore->loser->name << ": " << highScore->winnerScore << " - " << highScore->loserScore << "\n\n" << std::endl;
+
+	//Find lowest combined score
+	Score* lowCombinedScore = scores[0];
+	int combinedScoreLow = highCombinedScore->winnerScore + highCombinedScore->loserScore;
+	for (int i = 0; i < scorePos; i++) {
+		if (scores[i]->winnerScore + scores[i]->loserScore < combinedScoreLow) {
+			highScore = scores[i];
+			combinedScoreLow = scores[i]->winnerScore + scores[i]->loserScore;
+		}
+	}
+	std::cout << "Lowest Combined Score:" << std::endl;
+	std::cout << highScore->winner->name << " vs. " << highScore->loser->name << ": " << highScore->winnerScore << " - " << highScore->loserScore << "\n\n" << std::endl;
+
+
+
 	
+	std::cout << "======================================================================================================================" << std::endl;
 
 	//Display custom roster stats
 	std::cout << "Final roster statistics:\n" << std::endl;
