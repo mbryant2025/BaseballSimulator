@@ -88,20 +88,23 @@ int main() {
 		league[i]->calculateAllStats();
 	}
 
-	//Calculate top 10 BA, HR, H, RBI, R, PA
+	//Calculate top 10 BA, HR, H, 1B, 2b, 3B, RBI, R, PA
 	Player** topBA = new Player* [10];
 	Player** topHR = new Player* [10];
 	Player** topH = new Player* [10];
+	Player** top1B = new Player * [10];
+	Player** top2B = new Player * [10];
+	Player** top3B = new Player * [10];
 	Player** topRBI = new Player* [10];
 	Player** topR = new Player* [10];
 	Player** topPA = new Player * [10];
 
-	initializePlayerRankings(topBA, topHR, topH, topRBI, topR, topPA);
+	initializePlayerRankings(topBA, topHR, topH, top1B, top2B, top3B, topRBI, topR, topPA);
 
 	for (int i = 0; i < 30; i++) {
 		for (int j = 0; j < 9; j++) {
 			Player* p = league[i]->players[j];
-			placePlayerInRankings(p, topBA, topHR, topH, topRBI, topR, topPA);
+			placePlayerInRankings(p, topBA, topHR, topH, top1B, top2B, top3B, topRBI, topR, topPA);
 		}
 	}
 
@@ -110,20 +113,23 @@ int main() {
 	Roster** topRosterBA = new Roster* [10];
 	Roster** topRosterHR = new Roster* [10];
 	Roster** topRosterH = new Roster* [10];
+	Roster** topRoster1B = new Roster* [10];
+	Roster** topRoster2B = new Roster* [10];
+	Roster** topRoster3B = new Roster* [10];
 	Roster** topRosterR = new Roster* [10];
 	Roster** topRosterPA = new Roster * [10];
 
-	initializeRosterRankings(topRosterW, topRosterBA, topRosterHR, topRosterH, topRosterR, topRosterPA);
+	initializeRosterRankings(topRosterW, topRosterBA, topRosterHR, topRosterH, topRoster1B, topRoster2B, topRoster3B, topRosterR, topRosterPA);
 
 	for (int i = 0; i < 30; i++) {
 		Roster* t = league[i];
-		placeRosterInRankings(t, topRosterW, topRosterBA, topRosterHR, topRosterH, topRosterR, topRosterPA);
+		placeRosterInRankings(t, topRosterW, topRosterBA, topRosterHR, topRosterH, topRoster1B, topRoster2B, topRoster3B, topRosterR, topRosterPA);
 	}
 
 	//Display stat leaderboards
 	int k = 0;
 	std::cout << "League Leaders:\n" << std::endl;
-	for (Player** list : { topBA, topHR, topH, topRBI, topR, topPA }) {
+	for (Player** list : { topBA, topHR, topH, top1B, top2B, top3B, topRBI, topR, topPA }) {
 		for (int i = 0; i < 10; i++) {
 			Player* p = list[i];
 			if (k == 0) {
@@ -136,9 +142,18 @@ int main() {
 				std::cout << p->name << "\t" << p->team << "\t" << p->H << " H" << std::endl;
 			}
 			else if (k == 3) {
-				std::cout << p->name << "\t" << p->team << "\t" << p->RBI << " RBI" << std::endl;
+				std::cout << p->name << "\t" << p->team << "\t" << p->_1B << " 1B" << std::endl;
 			}
 			else if (k == 4) {
+				std::cout << p->name << "\t" << p->team << "\t" << p->_2B << " 2B" << std::endl;
+			}
+			else if (k == 5) {
+				std::cout << p->name << "\t" << p->team << "\t" << p->_3B << " 3B" << std::endl;
+			}
+			else if (k == 6) {
+				std::cout << p->name << "\t" << p->team << "\t" << p->RBI << " RBI" << std::endl;
+			}
+			else if (k == 7) {
 				std::cout << p->name << "\t" << p->team << "\t" << p->R << " R" << std::endl;
 			}
 			else {
@@ -152,7 +167,7 @@ int main() {
 
 	k = 0;
 	std::cout << "Team Leaders:\n" << std::endl;
-	for (Roster** list : { topRosterW, topRosterBA, topRosterHR, topRosterH, topRosterR, topRosterPA }) {
+	for (Roster** list : { topRosterW, topRosterBA, topRosterHR, topRosterH, topRoster1B, topRoster2B, topRoster3B, topRosterR, topRosterPA }) {
 		for (int i = 0; i < 10; i++) {
 			Roster* t = list[i];
 			if (k == 0) {
@@ -168,6 +183,15 @@ int main() {
 				std::cout << t->name << "\t" << t->H << " H" << std::endl;
 			}
 			else if (k == 4) {
+				std::cout << t->name << "\t" << t->_1B << " 1B" << std::endl;
+			}
+			else if (k == 5) {
+				std::cout << t->name << "\t" << t->_2B << " 2B" << std::endl;
+			}
+			else if (k == 6) {
+				std::cout << t->name << "\t" << t->_3B << " 3B" << std::endl;
+			}
+			else if (k == 7) {
 				std::cout << t->name << "\t" << t->R << " R" << std::endl;
 			}
 			else {
@@ -180,26 +204,19 @@ int main() {
 	std::cout << "\n" << std::endl;
 	
 
-
-
 	//Display custom roster stats
 	std::cout << "Final roster statistics:\n" << std::endl;
 	std::cout << r.W << " wins out of " << r.gamesPlayed << " games played\n" << std::endl;
 	for (int i = 0; i < 9; i++) {
 		Player* p = league[0]->players[i];
-		std::cout << p->name << "\t\t\t" << p->BA << " BA" << "\t" << p->HR << " HR" << "\t" << p->H << " H" << "\t" << p->BB << " BB" << "\t" << p->RBI << " RBI" << "\t\t" << p->R << " R" << "\t" << p->PA << " PA" << std::endl;
+		std::cout << p->name << "\t\t" << p->BA << " BA" << "\t" << p->HR << " HR" << "\t" << p->H << " H" << "\t" << p->_1B << " 1B" << "\t" << p->_2B << " 2B" << "\t" << p->_3B << " 3B" << "\t" << p->BB << " BB" << "\t" << p->R << " R" << "\t" << p->PA << " PA" << "\t" << p->RBI << " RBI" << std::endl;
 	}
 
-	std::cout << "=======================================================================================================" << std::endl;
+	std::cout << "======================================================================================================================" << std::endl;
 	
-	std::cout << r.name << "\t\t\t" << r.BA << " BA" << "\t" << r.HR << " HR" << "\t" << r.H << " H" << "\t" << r.BB << " BB" << "\t" << r.RBI << " RBI" << "\t" << r.R << " R" <<  "\t" << r.PA << " PA" << std::endl;
+	std::cout << r.name << "\t\t" << r.BA << " BA" << "\t" << r.HR << " HR" << "\t" << r.H << " H" << "\t" << r._1B << " 1B" << "\t" << r._2B << " 2B" << "\t" << r._3B << " 3B" << "\t" << r.BB << " BB" << "\t" << r.R << " R" << "\t" << r.PA << " PA" << "\t" << r.RBI << " RBI" << std::endl;
 	
 	
-
-
-	
-
-	//Calculate final standings
 
 	//Playoffs
 

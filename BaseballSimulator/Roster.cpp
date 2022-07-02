@@ -65,6 +65,9 @@ void Roster::calculateAllStats() {
 		this->H += players[i]->H;
 		this->PA += players[i]->PA;
 		this->HR += players[i]->HR;
+		this->_1B += players[i]->_1B;
+		this->_2B += players[i]->_2B;
+		this->_3B += players[i]->_3B;
 	}
 
 	this->BA = (double)this->H / (this->PA - this->BB);

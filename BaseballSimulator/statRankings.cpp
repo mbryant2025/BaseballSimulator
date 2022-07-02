@@ -2,10 +2,13 @@
 #include "Roster.h"
 #include "Player.h"
 
-void initializePlayerRankings(Player** topBA, Player** topHR, Player** topH, Player** topRBI, Player** topR, Player** topPA) {
+void initializePlayerRankings(Player** topBA, Player** topHR, Player** topH, Player** top1B, Player** top2B, Player** top3B, Player** topRBI, Player** topR, Player** topPA) {
 	for (int i = 0; i < 10; i++) {
 		topBA[i] = new Player();
 		topHR[i] = new Player();
+		top1B[i] = new Player();
+		top2B[i] = new Player();
+		top3B[i] = new Player();
 		topH[i] = new Player();
 		topRBI[i] = new Player();
 		topR[i] = new Player();
@@ -13,8 +16,7 @@ void initializePlayerRankings(Player** topBA, Player** topHR, Player** topH, Pla
 	}
 }
 
-void placePlayerInRankings(Player* p, Player** topBA, Player** topHR, Player** topH, Player** topRBI, Player** topR, Player** topPA)
-{
+void placePlayerInRankings(Player* p, Player** topBA, Player** topHR, Player** topH, Player** top1B, Player** top2B, Player** top3B, Player** topRBI, Player** topR, Player** topPA) {
 	int i = 0;
 	while (i < 10)
 	{
@@ -53,6 +55,48 @@ void placePlayerInRankings(Player* p, Player** topBA, Player** topHR, Player** t
 				topH[j] = topH[j - 1];
 			}
 			topH[i] = p;
+			break;
+		}
+		i++;
+	}
+	i = 0;
+	while (i < 10)
+	{
+		if (p->_1B > top1B[i]->_1B)
+		{
+			for (int j = 9; j > i; j--)
+			{
+				top1B[j] = top1B[j - 1];
+			}
+			top1B[i] = p;
+			break;
+		}
+		i++;
+	}
+	i = 0;
+	while (i < 10)
+	{
+		if (p->_2B > top2B[i]->_2B)
+		{
+			for (int j = 9; j > i; j--)
+			{
+				top2B[j] = top2B[j - 1];
+			}
+			top2B[i] = p;
+			break;
+		}
+		i++;
+	}
+	i = 0;
+	while (i < 10)
+	{
+		if (p->_3B > top3B[i]->_3B)
+		{
+			for (int j = 9; j > i; j--)
+			{
+				top3B[j] = top3B[j - 1];
+			}
+			top3B[i] = p;
 			break;
 		}
 		i++;
@@ -101,18 +145,21 @@ void placePlayerInRankings(Player* p, Player** topBA, Player** topHR, Player** t
 	}
 }
 
-void initializeRosterRankings(Roster** topRosterW, Roster** topRosterBA, Roster** topRosterHR, Roster** topRosterH, Roster** topRosterR, Roster** topRosterPA) {
+void initializeRosterRankings(Roster** topRosterW, Roster** topRosterBA, Roster** topRosterHR, Roster** topRosterH, Roster** topRoster1B, Roster** topRoster2B, Roster** topRoster3B, Roster** topRosterR, Roster** topRosterPA) {
 	for (int i = 0; i < 10; i++) {
 		topRosterW[i] = new Roster("");
 		topRosterBA[i] = new Roster("");
 		topRosterHR[i] = new Roster("");
 		topRosterH[i] = new Roster("");
+		topRoster1B[i] = new Roster("");
+		topRoster2B[i] = new Roster("");
+		topRoster3B[i] = new Roster("");
 		topRosterR[i] = new Roster("");
 		topRosterPA[i] = new Roster("");
 	}
 }
 
-void placeRosterInRankings(Roster* r, Roster** topRosterW, Roster** topRosterBA, Roster** topRosterHR, Roster** topRosterH, Roster** topRosterR, Roster** topRosterPA) {
+void placeRosterInRankings(Roster* r, Roster** topRosterW, Roster** topRosterBA, Roster** topRosterHR, Roster** topRosterH, Roster** topRoster1B, Roster** topRoster2B, Roster** topRoster3B, Roster** topRosterR, Roster** topRosterPA) {
 	int i = 0;
 	while (i < 30) {
 		if (r->W > topRosterW[i]->W) {
@@ -153,6 +200,39 @@ void placeRosterInRankings(Roster* r, Roster** topRosterW, Roster** topRosterBA,
 				topRosterH[j] = topRosterH[j - 1];
 			}
 			topRosterH[i] = r;
+			break;
+		}
+		i++;
+	}
+	i = 0;
+	while (i < 10) {
+		if (r->_1B > topRoster1B[i]->_1B) {
+			for (int j = 9; j > i; j--) {
+				topRoster1B[j] = topRoster1B[j - 1];
+			}
+			topRoster1B[i] = r;
+			break;
+		}
+		i++;
+	}
+	i = 0;
+	while (i < 10) {
+		if (r->_2B > topRoster2B[i]->_2B) {
+			for (int j = 9; j > i; j--) {
+				topRoster2B[j] = topRoster2B[j - 1];
+			}
+			topRoster2B[i] = r;
+			break;
+		}
+		i++;
+	}
+	i = 0;
+	while (i < 10) {
+		if (r->_3B > topRoster3B[i]->_3B) {
+			for (int j = 9; j > i; j--) {
+				topRoster3B[j] = topRoster3B[j - 1];
+			}
+			topRoster3B[i] = r;
 			break;
 		}
 		i++;
