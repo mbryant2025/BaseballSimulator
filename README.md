@@ -1,3 +1,5 @@
+Sample output:
+
 League Leaders:
 
 Lou Gehrig      Michael's Team  0.343137 BA
