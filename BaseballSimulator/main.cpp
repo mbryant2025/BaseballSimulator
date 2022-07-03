@@ -46,7 +46,7 @@ int main() {
 	r.addPlayer(&MarkMcGwire);
 
 	//A gross overestimate of how I'd do in the MLB
-	Player MichaelBryant("Michael Bryant", 5, 100, 5, 0, 0, 0, 500);
+	Player MichaelBryant("Michael Bryant", 4, 960, 5, 0, 0, 0, 1000);
 	r.addPlayer(&MichaelBryant);
 
 	//Add custom roster to league

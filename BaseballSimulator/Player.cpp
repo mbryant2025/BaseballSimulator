@@ -112,20 +112,5 @@ string Player::plateAppearance() {
 
 void Player::calculateStats() {
 	this->BA = (double) this->H / (this->PA - this->BB);
-
-	//Copilot made this...review later
-	/*SLG = (double)(_1B + 2 * _2B + 3 * _3B + 4 * HR) / PA;
-	RBI = (double)_1B + 2 * _2B + 3 * _3B + 4 * HR;
-	SB = (double)SB / PA;
-	CS = (double)CS / PA;
-	BB = (double)BB / PA;
-	H = (double)H / PA;
-	PA = (double)PA / PA;
-	SO = (double)SO / PA;
-	G = (double)G / PA;
-	HR = (double)HR / PA;
-	_1B = (double)_1B / PA;
-	_2B = (double)_2B / PA;
-	_3B = (double)_3B / PA;*/
 }
 
