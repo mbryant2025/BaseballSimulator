@@ -31,6 +31,8 @@ void Roster::init(string league, string givenName) {
 	this->W = 0;
 
 	this->league = league;
+
+	this->playoffSeed = -1;
 }
 
 Roster::Roster(string league, string givenName) {

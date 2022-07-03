@@ -54,7 +54,7 @@ int main() {
 	
 	//Fill out rest of league with rosters composed of random players
 	for (int i = 1; i < 29; i++) {
-		league[i] = new Roster(i % 2 ? "Al" : "NL");
+		league[i] = new Roster(i % 2 == 0 ? "AL" : "NL");
 		for (int j = 0; j < 9; j++) {
 			league[i]->addPlayer(new Player());
 		}
@@ -68,7 +68,7 @@ int main() {
 	}
 
 	//Record of all regular season game scores for stats
-	Score** scores = new Score* [4860];
+	Score** scores = new Score* [2430];
 	int scorePos = 0;
 
 	//Play random matchups until all rosters have played 162 games
@@ -245,13 +245,11 @@ int main() {
 	std::cout << "Lowest Combined Score:" << std::endl;
 	std::cout << highScore->winner->name << " vs. " << highScore->loser->name << ": " << highScore->winnerScore << " - " << highScore->loserScore << "\n\n" << std::endl;
 
-
-
-	
 	std::cout << "======================================================================================================================" << std::endl;
 
+
 	//Display custom roster stats
-	std::cout << "Final roster statistics:\n" << std::endl;
+	std::cout << "Regular Season Roster Statistics:\n" << std::endl;
 	std::cout << r.W << " wins out of " << r.gamesPlayed << " games played\n" << std::endl;
 	for (int i = 0; i < 9; i++) {
 		Player* p = league[0]->players[i];
@@ -266,13 +264,310 @@ int main() {
 
 	//Playoffs
 
-	
+	std::cout << "\n\nPlayoffs:\n\n" << std::endl;
 
-	
+	//Get top 5 teams from each league for playoffs
+	Roster** ALRankings = createLeagueRankings(league, "AL");
+	Roster** NLRankings = createLeagueRankings(league, "NL");
 
+	for (int i = 0; i < 5; i++) {
+		ALRankings[i]->playoffSeed = i + 1;
+		NLRankings[i]->playoffSeed = i + 1;
+	}
+
+	int zero = 0;
+	Roster* winner;
+	Roster* loser;
+
+	//Wild Card
+
+	Score** ALWC = new Score* [1];
+	Score** NLWC = new Score* [1];
 	
+	playGame(ALRankings[3], ALRankings[4], ALWC, &zero); zero--; //Undo auto-increment of position variable
+	playGame(NLRankings[3], NLRankings[4], NLWC, &zero); zero--;
+
+	std::cout << "ALWC\n==========" << std::endl;
+
+	winner = ALWC[0]->winner;
+	loser = ALWC[0]->loser;
+
+	std::cout << winner->name << " (" << winner->playoffSeed << ") defeated " << loser->name << " (" << loser->playoffSeed << ") " << ALWC[0]->winnerScore << "-" << ALWC[0]->loserScore << std::endl;
+	std::cout << "\n" << winner->name << " (" << winner->playoffSeed << ") has won the ALWC against " << loser->name << " (" << loser->playoffSeed << ") 1-0" << std::endl;
+
+	std::cout << "\n\nNLWC\n==========" << std::endl;
+
+	winner = NLWC[0]->winner;
+	loser = NLWC[0]->loser;
+
+	std::cout << winner->name << " (" << winner->playoffSeed << ") defeated " << loser->name << " (" << loser->playoffSeed << ") " << NLWC[0]->winnerScore << "-" << NLWC[0]->loserScore << std::endl;
+	std::cout << "\n" << winner->name << " (" << winner->playoffSeed << ") has won the NLWC against " << loser->name << " (" << loser->playoffSeed << ") 1-0" << std::endl;
+
+	//Divisional
+
+	Score** ALDSa = new Score* [5];
+	Score** ALDSb = new Score* [5];
+	Score** NLDSa = new Score* [5];
+	Score** NLDSb = new Score* [5];
+
+	Roster** ALDSWinners = new Roster* [2];
+	Roster** NLDSWinners = new Roster* [2];
+
+	std::cout << "\n\nALDS (1/2)\n==========" << std::endl;
+
+	int homeTeamWins = 0;
+	int awayTeamWins = 0;
+
+	int g_ALDSa = 0; //Keeps track of current game in the series -- winner of the final game wins the series
+	while (homeTeamWins < 3 && awayTeamWins < 3) {
+		playGame(ALRankings[0], ALWC[0]->winner, ALDSa, &g_ALDSa);
+
+		if (ALDSa[g_ALDSa - 1]->winner == ALRankings[0]) {
+			winner = ALDSa[g_ALDSa - 1]->winner;
+			loser = ALDSa[g_ALDSa - 1]->loser;
+			std::cout << winner->name << " (" << winner->playoffSeed << ") defeated " << loser->name << " (" << loser->playoffSeed << ") " << ALDSa[g_ALDSa - 1]->winnerScore << "-" << ALDSa[g_ALDSa - 1]->loserScore << std::endl;
+			homeTeamWins++;
+		}
+
+		if (ALDSa[g_ALDSa - 1]->winner == ALWC[0]->winner) {
+			winner = ALDSa[g_ALDSa - 1]->winner;
+			loser = ALDSa[g_ALDSa - 1]->loser;
+			std::cout << winner->name << " (" << winner->playoffSeed << ") defeated " << loser->name << " (" << loser->playoffSeed << ") " << ALDSa[g_ALDSa - 1]->winnerScore << "-" << ALDSa[g_ALDSa - 1]->loserScore << std::endl;
+			awayTeamWins++;
+		}
+	}
+
+	std::cout << "\n" << winner->name << " (" << winner->playoffSeed << ") has won the ALDS against " << loser->name << " (" << loser->playoffSeed << ") ";
+
+	if (homeTeamWins > awayTeamWins) {
+		std::cout << homeTeamWins << "-" << awayTeamWins << std::endl;
+		ALDSWinners[0] = ALRankings[0];
+	}
+	else {
+		std::cout << awayTeamWins << "-" << homeTeamWins << std::endl;
+		ALDSWinners[0] = ALWC[0]->winner;
+	}
+
+
+	std::cout << "\n\nALDS (2/2)\n==========" << std::endl;
+
+	homeTeamWins = 0;
+	awayTeamWins = 0;
+
+	int g_ALDSb = 0;
+	while (homeTeamWins < 3 && awayTeamWins < 3) {
+		playGame(ALRankings[1], ALRankings[2], ALDSb, &g_ALDSb);
+
+		if (ALDSb[g_ALDSb - 1]->winner == ALRankings[1]) {
+			winner = ALDSb[g_ALDSb - 1]->winner;
+			loser = ALDSb[g_ALDSb - 1]->loser;
+			std::cout << winner->name << " (" << winner->playoffSeed << ") defeated " << loser->name << " (" << loser->playoffSeed << ") " << ALDSb[g_ALDSb - 1]->winnerScore << "-" << ALDSb[g_ALDSb - 1]->loserScore << std::endl;
+			homeTeamWins++;
+		}
+
+		if (ALDSb[g_ALDSb - 1]->winner == ALRankings[2]) {
+			winner = ALDSb[g_ALDSb - 1]->winner;
+			loser = ALDSb[g_ALDSb - 1]->loser;
+			std::cout << winner->name << " (" << winner->playoffSeed << ") defeated " << loser->name << " (" << loser->playoffSeed << ") " << ALDSb[g_ALDSb - 1]->winnerScore << "-" << ALDSb[g_ALDSb - 1]->loserScore << std::endl;
+			awayTeamWins++;
+		}
+	}
+
+	std::cout << "\n" << winner->name << " (" << winner->playoffSeed << ") has won the ALDS against " << loser->name << " (" << loser->playoffSeed << ") ";
+
+	if (homeTeamWins > awayTeamWins) {
+		std::cout << homeTeamWins << "-" << awayTeamWins << std::endl;
+		ALDSWinners[1] = ALRankings[1];
+	}
+	else {
+		std::cout << awayTeamWins << "-" << homeTeamWins << std::endl;
+		ALDSWinners[1] = ALRankings[2];
+	}
+	
+	std::cout << "\n\nNLDS (1/2)\n==========" << std::endl;
+
+	homeTeamWins = 0;
+	awayTeamWins = 0;
+
+	int g_NLDSa = 0; //Keeps track of current game in the series -- winner of the finNL game wins the series
+	while (homeTeamWins < 3 && awayTeamWins < 3) {
+		playGame(NLRankings[0], NLWC[0]->winner, NLDSa, &g_NLDSa);
+
+		if (NLDSa[g_NLDSa - 1]->winner == NLRankings[0]) {
+			winner = NLDSa[g_NLDSa - 1]->winner;
+			loser = NLDSa[g_NLDSa - 1]->loser;
+			std::cout << winner->name << " (" << winner->playoffSeed << ") defeated " << loser->name << " (" << loser->playoffSeed << ") " << NLDSa[g_NLDSa - 1]->winnerScore << "-" << NLDSa[g_NLDSa - 1]->loserScore << std::endl;
+			homeTeamWins++;
+		}
+
+		if (NLDSa[g_NLDSa - 1]->winner == NLWC[0]->winner) {
+			winner = NLDSa[g_NLDSa - 1]->winner;
+			loser = NLDSa[g_NLDSa - 1]->loser;
+			std::cout << winner->name << " (" << winner->playoffSeed << ") defeated " << loser->name << " (" << loser->playoffSeed << ") " << NLDSa[g_NLDSa - 1]->winnerScore << "-" << NLDSa[g_NLDSa - 1]->loserScore << std::endl;
+			awayTeamWins++;
+		}
+	}
+
+	std::cout << "\n" << winner->name << " (" << winner->playoffSeed << ") has won the NLDS against " << loser->name << " (" << loser->playoffSeed << ") ";
+
+	if (homeTeamWins > awayTeamWins) {
+		std::cout << homeTeamWins << "-" << awayTeamWins << std::endl;
+		NLDSWinners[0] = NLRankings[0];
+	}
+	else {
+		std::cout << awayTeamWins << "-" << homeTeamWins << std::endl;
+		NLDSWinners[0] = NLWC[0]->winner;
+	}
+
+
+	std::cout << "\n\nNLDS (2/2)\n==========" << std::endl;
+
+	homeTeamWins = 0;
+	awayTeamWins = 0;
+
+	int g_NLDSb = 0;
+	while (homeTeamWins < 3 && awayTeamWins < 3) {
+		playGame(NLRankings[1], NLRankings[2], NLDSb, &g_NLDSb);
+
+		if (NLDSb[g_NLDSb - 1]->winner == NLRankings[1]) {
+			winner = NLDSb[g_NLDSb - 1]->winner;
+			loser = NLDSb[g_NLDSb - 1]->loser;
+			std::cout << winner->name << " (" << winner->playoffSeed << ") defeated " << loser->name << " (" << loser->playoffSeed << ") " << NLDSb[g_NLDSb - 1]->winnerScore << "-" << NLDSb[g_NLDSb - 1]->loserScore << std::endl;
+			homeTeamWins++;
+		}
+
+		if (NLDSb[g_NLDSb - 1]->winner == NLRankings[2]) {
+			winner = NLDSb[g_NLDSb - 1]->winner;
+			loser = NLDSb[g_NLDSb - 1]->loser;
+			std::cout << winner->name << " (" << winner->playoffSeed << ") defeated " << loser->name << " (" << loser->playoffSeed << ") " << NLDSb[g_NLDSb - 1]->winnerScore << "-" << NLDSb[g_NLDSb - 1]->loserScore << std::endl;
+			awayTeamWins++;
+		}
+	}
+
+	std::cout << "\n" << winner->name << " (" << winner->playoffSeed << ") has won the NLDS against " << loser->name << " (" << loser->playoffSeed << ") ";
+
+	if (homeTeamWins > awayTeamWins) {
+		std::cout << homeTeamWins << "-" << awayTeamWins << std::endl;
+		NLDSWinners[1] = NLRankings[1];
+	}
+	else {
+		std::cout << awayTeamWins << "-" << homeTeamWins << std::endl;
+		NLDSWinners[1] = NLRankings[2];
+	}
+
+	//League Championship
+
+	Score** ALCS = new Score* [7];
+	Score** NLCS = new Score* [7];
+
+	Roster** CSWinners = new Roster * [2];
+
+	std::cout << "\n\nALCS\n==========" << std::endl;
+
+	homeTeamWins = 0;
+	awayTeamWins = 0;
+
+	int g_ALCS = 0;
+	while (homeTeamWins < 4 && awayTeamWins < 4) {
+		playGame(ALDSWinners[0], ALDSWinners[1], ALCS, &g_ALCS);
+
+		if (ALCS[g_ALCS - 1]->winner == ALDSWinners[0]) {
+			winner = ALCS[g_ALCS - 1]->winner;
+			loser = ALCS[g_ALCS - 1]->loser;
+			std::cout << winner->name << " (" << winner->playoffSeed << ") defeated " << loser->name << " (" << loser->playoffSeed << ") " << ALCS[g_ALCS - 1]->winnerScore << "-" << ALCS[g_ALCS - 1]->loserScore << std::endl;
+			homeTeamWins++;
+		}
+
+		if (ALCS[g_ALCS - 1]->winner == ALDSWinners[1]) {
+			winner = ALCS[g_ALCS - 1]->winner;
+			loser = ALCS[g_ALCS - 1]->loser;
+			std::cout << winner->name << " (" << winner->playoffSeed << ") defeated " << loser->name << " (" << loser->playoffSeed << ") " << ALCS[g_ALCS - 1]->winnerScore << "-" << ALCS[g_ALCS - 1]->loserScore << std::endl;
+			awayTeamWins++;
+		}
+	}
+
+	std::cout << "\n" << winner->name << " (" << winner->playoffSeed << ") has won the ALCS against " << loser->name << " (" << loser->playoffSeed << ") ";
+
+	if (homeTeamWins > awayTeamWins) {
+		std::cout << homeTeamWins << "-" << awayTeamWins << std::endl;
+		CSWinners[0] = ALDSWinners[0];
+	}
+	else {
+		std::cout << awayTeamWins << "-" << homeTeamWins << std::endl;
+		CSWinners[0] = ALDSWinners[1];
+	}
+
+	std::cout << "\n\nNLCS\n==========" << std::endl;
+
+	homeTeamWins = 0;
+	awayTeamWins = 0;
+
+	int g_NLCS = 0;
+	while (homeTeamWins < 4 && awayTeamWins < 4) {
+		playGame(NLDSWinners[0], NLDSWinners[1], NLCS, &g_NLCS);
+
+		if (NLCS[g_NLCS - 1]->winner == NLDSWinners[0]) {
+			winner = NLCS[g_NLCS - 1]->winner;
+			loser = NLCS[g_NLCS - 1]->loser;
+			std::cout << winner->name << " (" << winner->playoffSeed << ") defeated " << loser->name << " (" << loser->playoffSeed << ") " << NLCS[g_NLCS - 1]->winnerScore << "-" << NLCS[g_NLCS - 1]->loserScore << std::endl;
+			homeTeamWins++;
+		}
+
+		if (NLCS[g_NLCS - 1]->winner == NLDSWinners[1]) {
+			winner = NLCS[g_NLCS - 1]->winner;
+			loser = NLCS[g_NLCS - 1]->loser;
+			std::cout << winner->name << " (" << winner->playoffSeed << ") defeated " << loser->name << " (" << loser->playoffSeed << ") " << NLCS[g_NLCS - 1]->winnerScore << "-" << NLCS[g_NLCS - 1]->loserScore << std::endl;
+			awayTeamWins++;
+		}
+	}
+
+	std::cout << "\n" << winner->name << " (" << winner->playoffSeed << ") has won the NLCS against " << loser->name << " (" << loser->playoffSeed << ") ";
+
+	if (homeTeamWins > awayTeamWins) {
+		std::cout << homeTeamWins << "-" << awayTeamWins << std::endl;
+		CSWinners[1] = NLDSWinners[0];
+	}
+	else {
+		std::cout << awayTeamWins << "-" << homeTeamWins << std::endl;
+		CSWinners[1] = NLDSWinners[1];
+	}
+
+	//World Series
+
+	Score** WS = new Score * [7];
+
+	std::cout << "\n\WS\n==========" << std::endl;
+
+	homeTeamWins = 0;
+	awayTeamWins = 0;
+
+	int g_WS = 0;
+	while (homeTeamWins < 4 && awayTeamWins < 4) {
+		playGame(CSWinners[0], CSWinners[1], WS, &g_WS);
+
+		if (WS[g_WS - 1]->winner == CSWinners[0]) {
+			winner = WS[g_WS - 1]->winner;
+			loser = WS[g_WS - 1]->loser;
+			std::cout << winner->name << " (" << winner->playoffSeed << ") defeated " << loser->name << " (" << loser->playoffSeed << ") " << WS[g_WS - 1]->winnerScore << "-" << WS[g_WS - 1]->loserScore << std::endl;
+			homeTeamWins++;
+		}
+
+		if (WS[g_WS - 1]->winner == CSWinners[1]) {
+			winner = WS[g_WS - 1]->winner;
+			loser = WS[g_WS - 1]->loser;
+			std::cout << winner->name << " (" << winner->playoffSeed << ") defeated " << loser->name << " (" << loser->playoffSeed << ") " << WS[g_WS - 1]->winnerScore << "-" << WS[g_WS - 1]->loserScore << std::endl;
+			awayTeamWins++;
+		}
+	}
+
+	std::cout << "\n" << winner->name << " (" << winner->playoffSeed << ") has won the World Series against " << loser->name << " (" << loser->playoffSeed << ") ";
+
+	if (homeTeamWins > awayTeamWins) {
+		std::cout << homeTeamWins << "-" << awayTeamWins << std::endl;
+	}
+	else {
+		std::cout << awayTeamWins << "-" << homeTeamWins << std::endl;
+	}
 
     return 0;
-
-
 }

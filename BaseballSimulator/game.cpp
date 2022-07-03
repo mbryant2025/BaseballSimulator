@@ -6,6 +6,7 @@
 #include <string>
 
 //Simulates a game by updating rosters and all involved players
+//Also adds score to scores array
 void playGame(Roster* home, Roster* away, Score** scores, int* scorePos) {
 
 	if (home->numPlayers != 9 || away->numPlayers != 9) {

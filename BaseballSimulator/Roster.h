@@ -31,6 +31,7 @@ class Roster {
 		int gamesPlayed;
 		int W;
 		string league;
+		int playoffSeed;
 		
 		void init(string league, string givenName);
 		

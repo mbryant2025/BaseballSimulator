@@ -1,6 +1,7 @@
 #include <string>
 #include "Roster.h"
 #include "Player.h"
+#include <iostream>
 
 void initializePlayerRankings(Player** topBA, Player** topHR, Player** topH, Player** top1B, Player** top2B, Player** top3B, Player** topRBI, Player** topR, Player** topPA) {
 	for (int i = 0; i < 10; i++) {
@@ -259,4 +260,41 @@ void placeRosterInRankings(Roster* r, Roster** topRosterW, Roster** topRosterBA,
 		}
 		i++;
 	}
+}
+
+Roster** createLeagueRankings(Roster** rosters, string desiredLeague) {
+	
+	Roster** rankings = new Roster* [5];
+	
+	for (int i = 0; i < 5; i++) {
+		rankings[i] = new Roster("");
+	}
+	
+
+	Roster* current;
+	for (int r = 0; r < 30; r++) {
+
+		current = rosters[r];
+
+		if (current->league != desiredLeague) continue;
+
+		
+
+		int i = 0;
+		while (i < 5) {
+			if (current->W > rankings[i]->W) {
+				for (int j = 4; j > i; j--) {
+					rankings[j] = rankings[j - 1];
+				}
+				rankings[i] = current;
+				break;
+			}
+			i++;
+		}
+
+	}
+
+	return rankings;
+	
+	
 }
